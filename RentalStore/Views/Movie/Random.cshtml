@@ -1,0 +1,26 @@
+﻿@*@model mvc2019.Models.Movie*@
+@model mvc2019.ViewModels.RandomMovieViewModel
+@{
+    ViewBag.Title = "Random";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@{
+    var className = Model.Customers.Count > 1 ? "rented" : null;
+ }
+
+<h2 class="@className">@Model.RandMovie.Name</h2>
+
+@{ 
+    if(Model.Customers.Count == 0) { 
+        <h2>Nadie ha rentado esta vaina :(</h2>
+    }
+    else{
+        <ul>
+            @foreach (var item in Model.Customers)
+            {
+                <li>@item.Name</li>
+            }
+        </ul>
+    }
+}
+

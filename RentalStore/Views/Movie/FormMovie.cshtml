@@ -1,0 +1,68 @@
+﻿@*@model mvc2019.Models.Movie*@
+@model mvc2019.ViewModels.FormMovieViewModel
+@{
+    ViewBag.Title = "Movie";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@*@{
+    if (Model.GetType()!= null)
+    {
+        <<h2>Edit Movie</h2>
+    }
+    else
+    {
+        <h2>New Movie</h2>
+    }
+    }*@
+<h2>Form Movie</h2>
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">@Html.ActionLink("Movies", "Index", "Movie")</li>
+        @{
+            if (Model.Movie == null)
+            {
+                <li class="breadcrumb-item active" aria-current="page">New</li>
+            }
+            else
+            {
+                <li class="breadcrumb-item active" aria-current="page">Edit</li>
+            }
+        }
+    </ol>
+</nav>
+
+@using (@Html.BeginForm("Save", "Movie"))
+{
+    @Html.ValidationSummary(true, "Please check the following errors!")
+    <div class="form-group">
+        @Html.LabelFor(m => m.Movie.Name)
+        @Html.TextBoxFor(m => m.Movie.Name, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.Movie.Name)
+    </div>
+    @*<div class="form-group">
+            @Html.LabelFor(m => m.Movie.GenreTypeId)
+            @Html.TextBoxFor(m => m.Movie.GenreTypeId, new { @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.Movie.GenreTypeId)
+        </div>*@
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Movie.GenreTypeId)
+        @Html.DropDownListFor(m => m.Movie.GenreTypeId, new SelectList(Model.Genres, "id", "Name"), "", new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.Movie.GenreTypeId)
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Movie.Duration)
+        @Html.TextBoxFor(m => m.Movie.Duration, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.Movie.Duration)
+    </div>
+    @Html.HiddenFor(m => m.Movie.Id)
+    @Html.AntiForgeryToken()
+    <button class="btn btn-primary" type="submit">Save</button>
+    <button class="btn btn-secondary" type="button">@Html.ActionLink("Cancel", "Index", "Movie")</button>
+}
+
+@section scripts
+{
+    @Scripts.Render("~/bundles/jqueryval")
+}

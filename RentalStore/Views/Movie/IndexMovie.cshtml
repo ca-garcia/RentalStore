@@ -1,0 +1,43 @@
+﻿@*@model mvc2019.Models.Movie*@
+@model mvc2019.ViewModels.ListMoviesViewModel
+@{
+    ViewBag.Title = "Movies List";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var i = 1;
+}
+
+<h2 class="className">Movies List</h2>
+
+@{
+    if (Model.Movies.Count == 0)
+    {
+        <h2>No existen pelis en el catalogo :(</h2>
+    }
+    else
+    {
+        <button class="btn btn-success">@Html.ActionLink("New Movie", "New", "Movie")</button>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Genre</th>
+                    <th scope="col">Duration</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Movies)
+                {
+                <tr class="table-active">
+                    <td scope="row">@Html.ActionLink(item.Name, "Details", "Movie", new { id = i }, null)</td>
+                    <td scope="row">@item.GenreType.Name</td>
+                    <td scope="row">@item.Duration</td>
+                    <td scope="row"><span class="badge badge-primary">@Html.ActionLink("Edit", "Edit", "Movie", new { id = item.Id }, null)</span></td>
+                </tr>
+                    i = i + 1;
+                }
+            </tbody>
+        </table>
+    }
+}
+

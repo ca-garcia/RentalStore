@@ -1,0 +1,49 @@
+﻿@*@model mvc2019.Models.Customer*@
+@model mvc2019.ViewModels.ListCustomersViewModel
+@{
+    ViewBag.Title = "Customers List";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var i = 1;
+}
+
+<h2 class="className">Customer List</h2>
+
+
+@{
+    if (Model.Customers.Count == 0)
+    {
+        <h2>No existen clientes registrados :(</h2>
+    }
+    else
+    {
+        //<a class="btn btn-success" href="@Html.ActionLink("New Customer", "New", "Customer")"/>
+        <button class="btn btn-success" type="button">@Html.ActionLink("New Customer", "New", "Customer")</button>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Membership</th>
+                    <th scope="col">Discount</th>
+                    <th scope="col">Is Subscribe</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Customers)
+                {
+                <tr class="table-active">
+                    <td scope="row">@Html.ActionLink(item.Name, "Details", "Customer", new { id = item.Id }, null)</td>
+                    <td scope="row">@{if (@item.MembershipType != null) { @item.MembershipType.Name; } }</td>
+                    <td scope="row">@{if (item.MembershipType != null) { @item.MembershipType.Discount; } }%</td>
+                    @*<td scope="row">@item.MembershipType.Discount%</td>*@
+                    @*<td scope="row">@item.IsSubscribe</td>*@
+                    <td scope="row">@Html.CheckBoxFor(m => m.Customers.SingleOrDefault(c => c.Id == item.Id).IsSubscribe)</td>
+                    <td scope="row"><span class="badge badge-primary">@Html.ActionLink("Edit", "Edit", "Customer", new { id = item.Id }, null)</span></td>
+                </tr>                
+                i = i+1;
+                }
+            </tbody>
+        </table>
+    }
+}
+

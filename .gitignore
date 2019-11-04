@@ -1,3 +1,5 @@
 # folders
 .vs/
 packages/
+RentalStore/bin/
+RentalStore/obj/

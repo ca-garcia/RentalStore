@@ -12,10 +12,13 @@ namespace mvc2019.App_Start
     {
         public MappingProfile()
         {
+            //Domain to DTO
             Mapper.CreateMap<Customer, CustomerDTO>();
-            Mapper.CreateMap<CustomerDTO, Customer>();
-            
             Mapper.CreateMap<Movie, MovieDTO>();
+            Mapper.CreateMap<Membership, MembershipDTO>();
+
+            //DTO to Domain
+            Mapper.CreateMap<CustomerDTO, Customer>();            
             Mapper.CreateMap<MovieDTO, Movie>();
         }
     }

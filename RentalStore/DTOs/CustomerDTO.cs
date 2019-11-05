@@ -1,18 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace mvc2019.DTOs
 {
     public class CustomerDTO
     {
-        public int Id { get; set; }
+        public int id { get; set; }
         [StringLength(255)]
         [Required(ErrorMessage = "Insert Client´s name!")]
-        public string Name { get; set; }
-        public bool IsSubscribe { get; set; }
-        public int? MembershipTypeId { get; set; }
+        public string name { get; set; }
+        public bool isSubscribe { get; set; }
+        public int? membershipTypeId { get; set; }
+        public MembershipDTO membershipType { get; set; }
     }
 }

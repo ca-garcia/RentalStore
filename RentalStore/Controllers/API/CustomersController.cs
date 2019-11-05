@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Web.Http;
+using System.Data.Entity;
 
 namespace mvc2019.Controllers.API
 {
@@ -21,12 +22,12 @@ namespace mvc2019.Controllers.API
         public IEnumerable <CustomerDTO> getCustomers() 
         {
             //return dbContext.Customers.ToList();
-            return dbContext.Customers.ToList().Select(Mapper.Map<Customer, CustomerDTO>);
+            return dbContext.Customers.Include(c => c.MembershipType).ToList().Select(Mapper.Map<Customer, CustomerDTO>);
         }
         // GET /api/customers/{id}
         public IHttpActionResult getCustomer(int id)
         {
-            var customer = dbContext.Customers.SingleOrDefault(c => c.Id == id);
+            var customer = dbContext.Customers.Include(c => c.MembershipType).SingleOrDefault(c => c.Id == id);
             if (customer == null)
                 //throw new HttpResponseException(HttpStatusCode.NotFound);
                 NotFound();
@@ -43,7 +44,7 @@ namespace mvc2019.Controllers.API
             var customer = Mapper.Map<CustomerDTO, Customer>(customerDto);
             dbContext.Customers.Add(customer);
             dbContext.SaveChanges();
-            customerDto.Id = customer.Id;
+            customerDto.id= customer.Id;
             return Created(new Uri(Request.RequestUri + "/" + customer.Id), customerDto);
         }
         // PUT /api/customers/{id}

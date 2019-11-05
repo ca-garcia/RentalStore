@@ -3,47 +3,110 @@
 @{
     ViewBag.Title = "Customers List";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    var i = 1;
+    //var i = 1;
 }
 
 <h2 class="className">Customer List</h2>
 
 
 @{
-    if (Model.Customers.Count == 0)
+    @*if (Model.Customers.Count == 0)
     {
         <h2>No existen clientes registrados :(</h2>
     }
-    else
+    else*@
     {
         //<a class="btn btn-success" href="@Html.ActionLink("New Customer", "New", "Customer")"/>
         <button class="btn btn-success" type="button">@Html.ActionLink("New Customer", "New", "Customer")</button>
-        <table class="table table-hover">
+        <table id="customers" class="table table-hover">
             <thead>
                 <tr>
                     <th scope="col">Name</th>
                     <th scope="col">Membership</th>
                     <th scope="col">Discount</th>
                     <th scope="col">Is Subscribe</th>
-                    <th scope="col"></th>
+                    <th scope="col">Actions</th>
+                    @*<th scope="col"></th>*@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in Model.Customers)
+                @*@foreach (var item in Model.Customers)
                 {
                 <tr class="table-active">
                     <td scope="row">@Html.ActionLink(item.Name, "Details", "Customer", new { id = item.Id }, null)</td>
                     <td scope="row">@{if (@item.MembershipType != null) { @item.MembershipType.Name; } }</td>
                     <td scope="row">@{if (item.MembershipType != null) { @item.MembershipType.Discount; } }%</td>
-                    @*<td scope="row">@item.MembershipType.Discount%</td>*@
-                    @*<td scope="row">@item.IsSubscribe</td>*@
                     <td scope="row">@Html.CheckBoxFor(m => m.Customers.SingleOrDefault(c => c.Id == item.Id).IsSubscribe)</td>
-                    <td scope="row"><span class="badge badge-primary">@Html.ActionLink("Edit", "Edit", "Customer", new { id = item.Id }, null)</span></td>
+                    <td scope="row">
+                    <span class="badge badge-primary">@Html.ActionLink("Edit", "Edit", "Customer", new { id = item.Id }, null)</span>
+                    <button class="btn-link js-delete" data-customer-id="@item.Id">Delete</button>
+                    </td>
                 </tr>                
                 i = i+1;
-                }
+                }*@
             </tbody>
         </table>
     }
 }
 
+@section scripts
+{
+<script>
+    $(document).ready(function () {
+        var table = $("#customers").DataTable({
+            ajax: {
+                url: "/api/customers/",
+                dataSrc: ""
+            },
+            columns: [
+                {
+                    data: "name",
+                    render: function (data, type, customer) {
+                        return "<a href='/customer/edit/" + customer.id + "'>" + customer.name + "</a>";
+                    }
+                },
+                {
+                    data: "membershipType.name",
+                },
+                {
+                    data: "membershipType.discount",
+                },
+                {
+                    data: "isSubscribe",
+                    render: function (data, type, customer) {
+                        var checked = customer.isSubscribe ? 'checked' : '';
+                        return "<input type='checkbox' value='" + customer.isSubscribe + "'" + checked +">";
+                    }
+                },
+                {
+                    data: "id",
+                    render: function (data) {
+                        //return "<button class='btn-link js-delete' data-customer-id=" + data + ">Delete</button>";
+                        return "<a href='#' class='badge badge-pill badge-danger js-delete' data-customer-id=" + data + ">Delete</a>";
+                    }
+                },
+            ]
+        });
+
+        $("#customers").on("click", ".js-delete", function () {
+            var button = $(this);
+
+            bootbox.confirm("Shure delete?", function (result) {
+                if (result) {
+                    $.ajax({
+                    url: "/api/customers/" + button.attr("data-customer-id"),
+                    method: "DELETE",
+                    success: function () {
+                        console.log("Success!");
+                        table.row(button.parents("tr")).remove().draw();
+                    }
+                });
+                }
+            });
+            //if (confirm("Shure?")) {
+                    
+            //};
+        });
+    });
+</script>
+}

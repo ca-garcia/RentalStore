@@ -30,14 +30,15 @@ namespace mvc2019.Controllers
                 pageIndex = 1;
             if (String.IsNullOrWhiteSpace(sortBy))
                 sortBy = "Name";
+            //return Content(string.Format("pageindex={0}&sortBy={1}", pageIndex, sortBy));
 
             //var customers = GetCustomers();
             //var customers = _dbcontext.Customers.ToList();
-            var customers = _dbcontext.Customers.Include(c => c.MembershipType).ToList();
-            
-            var custVM = new ListCustomersViewModel(customers);
-            return View("IndexCustomer", custVM);
-            //return Content(string.Format("pageindex={0}&sortBy={1}", pageIndex, sortBy));
+
+            //var customers = _dbcontext.Customers.Include(c => c.MembershipType).ToList();            
+            //var custVM = new ListCustomersViewModel(customers);
+            //return View("IndexCustomer", custVM);
+            return View("IndexCustomer");
         }
 
         //GET: /customer/details/id

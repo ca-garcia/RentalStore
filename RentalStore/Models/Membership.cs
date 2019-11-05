@@ -10,12 +10,12 @@ namespace mvc2019.Models
     {
         public int Id { get; set; }
         [Required]
+        public string Name { get; set; }
+        [Required]
         public short Fee { get; set; }
         [Required]
         public short DurationInMonths { get; set; }
         [Required]
         public short Discount { get; set; }
-        [Required]
-        public string Name{ get; set; }
     }
 }

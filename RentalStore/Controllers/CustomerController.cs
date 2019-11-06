@@ -9,6 +9,7 @@ using System.Data.Entity;
 
 namespace mvc2019.Controllers
 {
+    [Authorize(Roles = RoleName.CanManageCustomers)]
     public class CustomerController : Controller
     {
         private ApplicationDbContext _dbcontext;
@@ -38,7 +39,11 @@ namespace mvc2019.Controllers
             //var customers = _dbcontext.Customers.Include(c => c.MembershipType).ToList();            
             //var custVM = new ListCustomersViewModel(customers);
             //return View("IndexCustomer", custVM);
-            return View("IndexCustomer");
+
+            if (User.IsInRole(RoleName.CanManageCustomers))
+                return View("IndexCustomer");
+            
+            return View("IndexCustomerReadOnly");
         }
 
         //GET: /customer/details/id
@@ -92,6 +97,7 @@ namespace mvc2019.Controllers
             _dbcontext.SaveChanges();
             return RedirectToAction("Index", "Customer");
         }
+
         public ActionResult Edit(int id)
         {
             var customer = _dbcontext.Customers.SingleOrDefault(c => c.Id == id);

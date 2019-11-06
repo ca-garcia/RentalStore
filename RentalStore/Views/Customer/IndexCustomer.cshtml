@@ -6,7 +6,7 @@
     //var i = 1;
 }
 
-<h2 class="className">Customer List</h2>
+<h2 class="className">Customers List</h2>
 
 
 @{
@@ -62,7 +62,7 @@
                 {
                     data: "name",
                     render: function (data, type, customer) {
-                        return "<a href='/customer/edit/" + customer.id + "'>" + customer.name + "</a>";
+                        return "<a href='/customer/details/" + customer.id + "'>" + customer.name + "</a>";
                     }
                 },
                 {
@@ -82,7 +82,7 @@
                     data: "id",
                     render: function (data) {
                         //return "<button class='btn-link js-delete' data-customer-id=" + data + ">Delete</button>";
-                        return "<a href='#' class='badge badge-pill badge-danger js-delete' data-customer-id=" + data + ">Delete</a>";
+                        return "<a href='/customer/edit/"+ data + "' class='badge badge-pill badge-primary'>Edit</a> <a href='#' class='badge badge-pill badge-danger js-delete' data-customer-id=" + data + ">Delete</a>";
                     }
                 },
             ]

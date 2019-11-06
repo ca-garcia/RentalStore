@@ -9,6 +9,7 @@ using System.Data.Entity;
 
 namespace mvc2019.Controllers
 {
+    [Authorize(Roles = RoleName.CanManageMovies)]
     public class MovieController : Controller
     {
         private ApplicationDbContext _dbcontext;
@@ -23,17 +24,22 @@ namespace mvc2019.Controllers
             _dbcontext.Dispose();
         }
 
+        [AllowAnonymous]
         // GET: Movie
         public ActionResult Index(int? pageIndex, string sortBy)
         {
-            if (!pageIndex.HasValue)
-                pageIndex = 1;
-            if (String.IsNullOrWhiteSpace(sortBy))
-                sortBy = "Name";
+            //if (!pageIndex.HasValue)
+            //    pageIndex = 1;
+            //if (String.IsNullOrWhiteSpace(sortBy))
+            //    sortBy = "Name";
 
             var movies = _dbcontext.Movies.Include(m => m.GenreType).ToList();
             var moviesVM = new ListMoviesViewModel(movies);
-            return View("IndexMovie", moviesVM);
+
+            if (User.IsInRole(RoleName.CanManageMovies))
+                return View("IndexMovie", moviesVM);
+
+            return View("IndexMovieReadOnly", moviesVM);
             //return Content(string.Format("pageindex={0}&sortBy={1}", pageIndex, sortBy));
         }
 
@@ -42,11 +48,9 @@ namespace mvc2019.Controllers
         public ActionResult Details(int id)
         {
             var movie = _dbcontext.Movies.Include(m => m.GenreType).SingleOrDefault(m => m.Id == id);
-            //var movie = _dbcontext.Customers.Include(c => c.MembershipType).SingleOrDefault(c => c.Id == id);
             if (movie == null)
                 return HttpNotFound();
             
-            //return Content(movie.Name);
             return View("DetailsMovie", movie);
             
         }
@@ -88,6 +92,7 @@ namespace mvc2019.Controllers
             _dbcontext.SaveChanges();
             return RedirectToAction("Index", "Movie");
         }
+
         public ActionResult Edit(int id)
         {
             var movie = _dbcontext.Movies.SingleOrDefault(m => m.Id == id);

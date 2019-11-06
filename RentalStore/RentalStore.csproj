@@ -234,6 +234,10 @@
     <Compile Include="Migrations\201910312320306_Movie_v3.Designer.cs">
       <DependentUpon>201910312320306_Movie_v3.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201911052149548_seed_Users-Roles.cs" />
+    <Compile Include="Migrations\201911052149548_seed_Users-Roles.Designer.cs">
+      <DependentUpon>201911052149548_seed_Users-Roles.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\CustomValidation.cs" />
@@ -243,6 +247,7 @@
     <Compile Include="Models\Customer.cs" />
     <Compile Include="Models\Membership.cs" />
     <Compile Include="Models\Movie.cs" />
+    <Compile Include="Models\RoleName.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="ViewModels\FormMovieViewModel.cs" />
@@ -492,6 +497,8 @@
     <Content Include="Views\Movie\DetailsMovie.cshtml" />
     <Content Include="Views\Customer\FormCustomer.cshtml" />
     <Content Include="Views\Movie\FormMovie.cshtml" />
+    <Content Include="Views\Customer\IndexCustomerReadOnly.cshtml" />
+    <Content Include="Views\Movie\IndexMovieReadOnly.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -539,6 +546,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201910312320306_Movie_v3.resx">
       <DependentUpon>201910312320306_Movie_v3.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201911052149548_seed_Users-Roles.resx">
+      <DependentUpon>201911052149548_seed_Users-Roles.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

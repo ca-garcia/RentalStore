@@ -10,6 +10,7 @@ using System.Web.Http;
 
 namespace RentalStore.Controllers.API
 {
+    [Authorize(Roles = RoleName.CanManageMovies)]
     public class MoviesController : ApiController
     {
         private ApplicationDbContext dbContext;
@@ -18,6 +19,7 @@ namespace RentalStore.Controllers.API
         {
             dbContext = new ApplicationDbContext();
         }
+        [AllowAnonymous]
         // GET /api/movies
         public IEnumerable<MovieDTO> getMovies()
         {

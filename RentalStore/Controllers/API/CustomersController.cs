@@ -10,6 +10,7 @@ using System.Data.Entity;
 
 namespace mvc2019.Controllers.API
 {
+    [Authorize(Roles = RoleName.CanManageCustomers)]
     public class CustomersController : ApiController
     {
         private ApplicationDbContext dbContext;

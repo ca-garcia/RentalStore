@@ -18,5 +18,7 @@ namespace mvc2019.DTOs
         public int GenreTypeId { get; set; }
         [CustomValidationMovie]
         public int Duration { get; set; }
+        public byte NumberInStock { get; set; }
+        public byte NumberAvailable { get; set; }
     }
 }

@@ -22,6 +22,7 @@
                     <th scope="col">Name</th>
                     <th scope="col">Genre</th>
                     <th scope="col">Duration</th>
+                    <th scope="col">Availability</th>
                     <th scope="col">Actions</th>
                 </tr>
             </thead>
@@ -32,6 +33,7 @@
                         <td scope="row">@Html.ActionLink(item.Name, "Details", "Movie", new { id = i }, null)</td>
                         <td scope="row">@item.GenreType.Name</td>
                         <td scope="row">@item.Duration</td>
+                        <td scope="row">@item.NumberAvailable</td>
                         <td scope="row">
                             <span class="badge badge-primary">@Html.ActionLink("Edit", "Edit", "Movie", new { id = item.Id }, null)</span>
                             <a href="#" class="badge badge-pill badge-danger js-delete" data-customer-id="@item.Id">Delete</a>

@@ -1,0 +1,181 @@
+﻿@model mvc2019.ViewModels.RentalViewModel
+@{
+    ViewBag.Title = "New Rental";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Form Rental</h2>
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">@Html.ActionLink("Rentals", "Index", "Rental")</li>
+        @{
+//if (Model.Customer == null)
+//{
+                <li class="breadcrumb-item active" aria-current="page">New</li>
+                //}
+                //else
+                //{
+                //    <li class="breadcrumb-item active" aria-current="page">Edit</li>
+                //}
+        }
+    </ol>
+</nav>
+
+<form id="newRentalForm" class="form-inlinee">
+    <label for="customer">Customer</label>
+    <div class="form-group">
+        <div class="tt-container">
+            <input type="text" id="customer" name="customer" required class="form-control mx-sm-3" aria-describedby="passwordHelpInline" data-rule-validCustomer="true">
+            <small id="passwordHelpInline" class="text-muted">
+                Select the customer.
+            </small>
+        </div>
+    </div>
+    <label for="movie">Movie</label>
+    <div class="form-group">
+        <div class="tt-container">
+            <input type="text" id="movie" name="movie" class="form-control mx-sm-3" aria-describedby="passwordHelpInline" data-rule-oneMovie="true">
+            <small id="passwordHelpInline" class="text-muted">
+                Select one or multiple movies.
+            </small>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <ul id="movies-selected" name="movies-selected" class="list-group"></ul>
+        </div>
+    </div>
+    <input type="submit" value="Submit" class="btn btn-primary" id="submit"/>
+    <input type="reset" value="Clear" class="btn btn-default" id="clear-form"/>
+</form>
+
+@section scripts
+{
+@Scripts.Render("~/bundles/jqueryval")
+
+<script>
+    $(document).ready(function () {
+        var vm = {
+            customerId: 0,
+            moviesIds:[]
+        }
+        var customers = new Bloodhound({
+                datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+                queryTokenizer: Bloodhound.tokenizers.whitespace,
+                remote: {
+                    url: '/api/customers?query=%QUERY',
+                    wildcard: '%QUERY'
+                }
+            });
+
+        $('#customer').typeahead({
+            minLength: 3,
+            highlight: true
+        }, {
+            name: 'customers',
+            display: 'name',
+            source: customers
+        }).on("typeahead:select", function(e, customer) {
+            vm.customerId = customer.id;
+            console.log("CustomerId:" + customer.id);
+        });
+
+        var movies = new Bloodhound({
+                datumTokenizer: Bloodhound.tokenizers.obj.whitespace('Name'),
+                queryTokenizer: Bloodhound.tokenizers.whitespace,
+                remote: {
+                    url: '/api/movies?query=%QUERY',
+                    wildcard: '%QUERY'
+                }
+            });
+
+        $('#movie').typeahead({
+            minLength: 2,
+            highlight: true
+        }, {
+            name: 'movies',
+            display: 'Name',
+            source: movies
+        }).on("typeahead:select", function(e, movie) {
+            $("#movies-selected").append("<li class='list-group-item'>" + movie.Name + "<span class='badge badge-dark'>" + movie.NumberAvailable + "</span></li>");
+            $("#movie").typeahead("val", "");//clear value
+            vm.moviesIds.push(movie.Id);
+            console.log("Movie-available:" + movie.NumberAvailable);
+            if (movie.NumberAvailable < 20) {
+                $("#submit").prop("disabled", true);
+                toastr.error("Not avaliable Movie selected!");
+            }
+        });
+
+        $.validator.addMethod("validCustomer", function () {
+            return vm.customerId && vm.customerId != 0;
+        }, "Select a valid Customer!");
+
+        $.validator.addMethod("oneMovie", function () {
+            return vm.moviesIds && vm.moviesIds.length > 0;
+        },"Select at least one Movie!");
+
+        var valiator = $("#newRentalForm").validate({
+            submitHandler: function () {
+                //Form Submit validation
+
+                //for (var i = 0; i < vm.moviesIds.length; i++) {
+                //    if (vm.moviesIds[i].NumberAvailable < 20) {
+                //        toastr.error("Not avaliable Movie selected!");
+                //        return false;
+                //    }
+                //};
+
+                $.ajax({
+                    url: "/api/rentals",
+                    method: "post",
+                    data: vm
+                })
+                    .done(function () {
+                        //console.log("done!");
+                        toastr.success("Rental successfully recorded.");
+                        //Reset all
+                        $("#customer").typeahead("val", "");
+                        $("#movie").typeahead("val", "");
+                        $("#movies-selected").empty();
+                        vm = { customerId: 0, moviesIds: [] };
+                        validator.resetForm();
+                    })
+                    .fail(function () {
+                        //console.log("fail!");
+                        toastr.error("Can not save rent record! Something unexpected happened.");
+                    });
+           
+                return false; //same as "e.preventDefault();"
+            }
+        });
+
+        $("#clear-form").on("click", function () {
+            $('#movies-selected').empty();
+            $("#submit").prop("disabled", false);
+            vm = { customerId: 0, moviesIds: [] };
+            validator.resetForm();
+        });
+
+       //$("#newRentalForm").submit(function (e) {
+       //     e.preventDefault();
+       //     $.ajax({
+       //         url: "/api/rentals",
+       //         method: "post",
+       //         data: vm
+       //     })
+       //         .done(function () {
+       //             //console.log("done!");
+       //             toastr.success("Rental successfully recorded.");
+       //         })
+       //         .fail(function () {
+       //             //console.log("fail!");
+       //             toastr.error("Can not save rent record! Something unexpected happened.");
+       //         });
+           
+       //     $("#movies-selected").empty();//clear ul
+       // });
+
+    });
+</script>
+}

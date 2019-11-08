@@ -25,12 +25,16 @@ namespace mvc2019
             bundles.Add(new ScriptBundle("~/bundles/libs").Include(
                       "~/Scripts/datatables/jquery.datatables.js",
                       "~/Scripts/datatables/datatables.bootstrap.js",
+                      "~/Scripts/typeahead.bundle.js",
+                      "~/Scripts/toastr.js",
                       "~/Scripts/bootbox.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
                       //"~/Content/bootstrap-darkly.css",
                       "~/Content/datatables/css/datatables.bootstrap.css",
+                      "~/Content/typeahead.css",
+                      "~/Content/toastr.css",
                       "~/Content/site.css"
                       ));
         }

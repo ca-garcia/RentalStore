@@ -1,0 +1,94 @@
+﻿@*@model mvc2019.Models.Customer*@
+@*@model mvc2019.ViewModels.ListCustomersViewModel*@
+@{
+    ViewBag.Title = "Rentals List";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    //var i = 1;
+}
+
+<h2 class="className">Rentals List</h2>
+
+@*<a class="btn btn-success" href="@Html.ActionLink("New Customer", "New", "Customer")"/>*@
+<button class="btn btn-success" type="button">@Html.ActionLink("New Rental", "New", "Rental")</button>
+<table id="rentals" class="table table-hover">
+    <thead>
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Client</th>
+            <th scope="col">Movie</th>
+            <th scope="col">Date Rented</th>
+            <th scope="col">Date Returned</th>
+            <th scope="col">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+
+@section scripts
+{
+<script>
+    $(document).ready(function () {
+        var table = $("#rentals").DataTable({
+            ajax: {
+                url: "/api/rentals/",
+                dataSrc: ""
+            },
+            columns: [
+                {
+                    data: "id",
+                    //render: function (data, type, rental) {
+                    //    return "<a href='/customer/details/" + rental.id + "'>" + rental.id + "</a>";
+                    //}
+                },
+                {
+                    data: "customer.name",
+                },
+                {
+                    data: "movie.Name",
+                },
+                {
+                    data: "dateRented",
+                },
+                {
+                    data: "dateReturned",
+                },
+                //{
+                //    data: "isSubscribe",
+                //    render: function (data, type, customer) {
+                //        var checked = customer.isSubscribe ? 'checked' : '';
+                //        return "<input type='checkbox' value='" + customer.isSubscribe + "'" + checked +">";
+                //    }
+                //},
+                {
+                    data: "id",
+                    render: function (data, type, rental) {
+                        var classes = rental.dateReturned ? 'badge badge-pill badge-danger js-return hide' : 'badge badge-pill badge-danger js-return';
+                        return "<a id='link-return' href='#' class='" + classes + "' data-rental-id='" + data + "'>Return</a>";
+                    }
+                },
+            ]
+        });
+
+        $("#rentals").on("click", ".js-return", function () {
+            var button = $(this);
+
+            bootbox.confirm("Shure return?", function (result) {
+                if (result) {
+                    $.ajax({
+                    url: "/api/rentals/" + button.attr("data-rental-id"),
+                    method: "PUT",
+                    success: function () {
+                        console.log("Success!");
+                        toastr.success("Rental returned successfully.");
+                        $("#link-return").remove();
+                        table.draw();
+                    }
+                });
+                }
+            });
+        });
+
+    });
+</script>
+}

@@ -20,10 +20,16 @@ namespace mvc2019.Controllers.API
             dbContext = new ApplicationDbContext();
         }
         // GET /api/customers
-        public IEnumerable <CustomerDTO> getCustomers() 
+        public IHttpActionResult getCustomers(string query = null) 
         {
+            var CustomersQuery = dbContext.Customers.Include(c => c.MembershipType);
+
+            if (!String.IsNullOrWhiteSpace(query))
+                CustomersQuery = CustomersQuery.Where(c => c.Name.Contains(query));
+
+            var CustomerDTOs = CustomersQuery.ToList().Select(Mapper.Map<Customer, CustomerDTO>);
+            return Ok(CustomerDTOs);
             //return dbContext.Customers.ToList();
-            return dbContext.Customers.Include(c => c.MembershipType).ToList().Select(Mapper.Map<Customer, CustomerDTO>);
         }
         // GET /api/customers/{id}
         public IHttpActionResult getCustomer(int id)

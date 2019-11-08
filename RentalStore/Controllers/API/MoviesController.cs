@@ -5,8 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Http;
+using System.Data.Entity;
+
 
 namespace RentalStore.Controllers.API
 {
@@ -21,10 +22,16 @@ namespace RentalStore.Controllers.API
         }
         [AllowAnonymous]
         // GET /api/movies
-        public IEnumerable<MovieDTO> getMovies()
+        public IHttpActionResult getMovies(string query = null)
         {
+            var MoviesQuery = dbContext.Movies.Include(m => m.GenreType);
+
+            if (!String.IsNullOrWhiteSpace(query))
+                MoviesQuery = MoviesQuery.Where(m => m.Name.Contains(query));
+
+            var MoviesDTOs = MoviesQuery.ToList().Select(Mapper.Map<Movie, MovieDTO>);
+            return Ok(MoviesDTOs);
             //return dbContext.Customers.ToList();
-            return dbContext.Movies.ToList().Select(Mapper.Map<Movie, MovieDTO>);
         }
         // GET /api/movies/{id}
         public IHttpActionResult getMovie(int id)
@@ -67,14 +74,14 @@ namespace RentalStore.Controllers.API
         }
         // DELETE /api/movies/{id}
         [HttpDelete]
-        public bool delMovie(int id)
+        public IHttpActionResult delMovie(int id)
         {
             var movieDB = dbContext.Movies.SingleOrDefault(m => m.Id == id);
             if (movieDB == null)
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             dbContext.Movies.Remove(movieDB);
             dbContext.SaveChanges();
-            return true;
+            return Ok();
         }
 
     }

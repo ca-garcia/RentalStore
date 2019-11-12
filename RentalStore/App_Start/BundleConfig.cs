@@ -35,6 +35,7 @@ namespace mvc2019
                       "~/Content/datatables/css/datatables.bootstrap.css",
                       "~/Content/typeahead.css",
                       "~/Content/toastr.css",
+                      //"~/Content/404.css",
                       "~/Content/site.css"
                       ));
         }
